@@ -54,6 +54,7 @@ int main()
 	}
     }
 
+    /* PART 2 - print the histogram */
     for (int i = 0; i < NUMBER_OF_BINS - 1; ++i) {
 	printf("Length of \t%2d\t| ", i + 1); 
 	printhist(nWordLength[i]); 
