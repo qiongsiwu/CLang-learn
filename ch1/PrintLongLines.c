@@ -6,7 +6,7 @@
 
 #include <stdio.h>
 #define MAXLINE  1000 /* maximum input line size */
-#define HOW_LONG 10   /* print lines longer than 
+#define HOW_LONG 80   /* print lines longer than 
 			 HOW_LONG
 		      */
 
