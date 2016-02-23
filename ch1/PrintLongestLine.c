@@ -49,7 +49,7 @@ int getline(char s[], int lim)
 	s[i] = c; 
 	++i; 
     }
-    s[i] = '\n';
+    s[i] = '\0';
     return i; 
 }
 
