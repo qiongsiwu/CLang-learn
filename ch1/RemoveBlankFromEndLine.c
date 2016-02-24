@@ -13,7 +13,7 @@ void copy(char to[], char from[]);
 int rmblank(char line[], int length); 
 void setline(char line[], int length); 
 
-/* print longest input line */ 
+/* remove blank at the end of the lines */ 
 int main()
 {
     int len; 
