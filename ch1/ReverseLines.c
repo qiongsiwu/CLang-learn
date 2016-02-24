@@ -75,7 +75,10 @@ void copy(char to[], char from[])
 	++i; 
 }
 
-/* reverse: reverse char string s */
+/* reverse: reverse char string s 
+   assumes that s is a line and always end with
+   \n\0. 
+*/
 void reverse(char s[])
 {
     int len, c; 
