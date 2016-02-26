@@ -15,8 +15,6 @@
 #include <limits.h>
 #include <float.h>
 
-#define SIZE_OF_ONE_BYTE 8
-
 int main()
 {
     printf("Print from header files: \n"); 
@@ -33,16 +31,16 @@ int main()
     /* compute the range of signed char */
     char cmin, cmax; 
     cmin = cmax = 0; 
-    for (int i = 0; i < sizeof(char) * SIZE_OF_ONE_BYTE - 1; ++i) {
+    for (int i = 0; i < sizeof(char) * CHAR_BIT - 1; ++i) {
 	cmax += (1 << i); 
     } 
-    cmin += 1 << (sizeof(char) * SIZE_OF_ONE_BYTE - 1);  
+    cmin += 1 << (sizeof(char) * CHAR_BIT - 1);  
     printf("signed char\tmin:%d\tmax:%d\n", cmin, cmax); 
 
     /* compute the max of unsigned char */ 
     /* note there is no leading sign bit */
     unsigned char ucmax = 0;     
-    for (int i = 0; i < sizeof(unsigned char) * SIZE_OF_ONE_BYTE; ++i) {
+    for (int i = 0; i < sizeof(unsigned char) * CHAR_BIT; ++i) {
 	ucmax += (1 << i); 
     }
     printf("unsigned char\tmin:%d\tmax:%d\n", 0, ucmax);
@@ -50,16 +48,16 @@ int main()
     /* compute the range of short */ 
     short smin, smax; 
     smin = smax = 0; 
-    for (int i = 0; i < sizeof(short) * SIZE_OF_ONE_BYTE - 1; ++i) {
+    for (int i = 0; i < sizeof(short) * CHAR_BIT - 1; ++i) {
 	smax += (1 << i); 
     }
-    smin += 1 << (sizeof(short)* SIZE_OF_ONE_BYTE - 1); 
+    smin += 1 << (sizeof(short)* CHAR_BIT - 1); 
     printf("signed short\tmin:%d\tmax:%d\n", smin, smax);
 
     /* compute the range of unsigned short */
     /* note there is no leading sign bit */ 
     unsigned short usmax = 0;     
-    for (int i = 0; i < sizeof(unsigned short) * SIZE_OF_ONE_BYTE; ++i) {
+    for (int i = 0; i < sizeof(unsigned short) * CHAR_BIT; ++i) {
 	usmax += (1 << i); 
     }
     printf("unsigned short\tmin:%d\tmax:%d\n", 0, usmax);
@@ -67,16 +65,16 @@ int main()
     /* compute the range of int */
     int imin, imax; 
     imin = imax = 0; 
-    for (int i = 0; i < sizeof(int) * SIZE_OF_ONE_BYTE - 1; ++i) {
+    for (int i = 0; i < sizeof(int) * CHAR_BIT - 1; ++i) {
 	imax += (1 << i); 
     } 
-    imin += 1 << (sizeof(int) * SIZE_OF_ONE_BYTE - 1);  
+    imin += 1 << (sizeof(int) * CHAR_BIT - 1);  
     printf("signed int\tmin:%d\tmax:%d\n", imin, imax); 
 
     /* compute the range of unsigned int */
     /* note there is no leading sign bit */ 
     unsigned int uimax = 0;     
-    for (int i = 0; i < sizeof(unsigned int) * SIZE_OF_ONE_BYTE; ++i) {
+    for (int i = 0; i < sizeof(unsigned int) * CHAR_BIT; ++i) {
 	uimax += (1 << i); 
     }
     printf("unsigned int\tmin:%u\tmax:%u\n", 0, uimax);
@@ -84,16 +82,16 @@ int main()
     /* compute the range of long */ 
     long lmin, lmax; 
     lmin = lmax = 0; 
-    for (int i = 0; i < sizeof(long) * SIZE_OF_ONE_BYTE - 1; ++i) {
+    for (int i = 0; i < sizeof(long) * CHAR_BIT - 1; ++i) {
 	lmax += (1l << i); 
     }
-    lmin += 1l << (sizeof(long) * SIZE_OF_ONE_BYTE - 1); 
+    lmin += 1l << (sizeof(long) * CHAR_BIT - 1); 
     printf("signed long\tmin:%ld\tmax:%ld\n", lmin, lmax);
 
     /* compute the range of unsigned long */
     /* note there is no leading sign bit */ 
     unsigned long ulmax = 0; 
-    for (int i = 0; i < sizeof(unsigned long) * SIZE_OF_ONE_BYTE; ++i) {
+    for (int i = 0; i < sizeof(unsigned long) * CHAR_BIT; ++i) {
 	ulmax += (1l << i); 
     }
     printf("unsigned long\tmin:%lu\tmax:%lu\n", 0l, ulmax);
