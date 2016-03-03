@@ -47,9 +47,7 @@ unsigned setbits(unsigned x, int p, int n, unsigned y)
     unsigned k = ~(~0 << (p + 1 - n)); /* zeros with p + 1 - n 1's at the
 					  right end
 				       */
-    m = m | k; /* 1's with n zeros start at position p followed by 
-		  zeros. 
-		*/
+    m = m | k; /* 1's with n zeros start at position p */
     
     /* apply the mask to x */ 
     x = x & m; 
