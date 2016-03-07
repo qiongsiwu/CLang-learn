@@ -5,7 +5,7 @@
    binsearch2 does 2 comparisons inside the while loop with
    an extra check at the end. 
    
-   The two do not exhibit significan run time differences. 
+   The two do not exhibit significant run time differences. 
 */
 
 #include <stdio.h>
