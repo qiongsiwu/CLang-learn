@@ -1,5 +1,11 @@
 /* Example in Section 4.3
    Exercise 4-3
+   Exercise 4-4: For exercise 4-4, the following capital case letters
+   are introduced for commands
+   - 'T' for printing top of stack
+   - 'D' for duplicating top of stack
+   - 'S' for swaping the top two elements
+   - 'C' for clearing the stack
  */
 
 #include <stdio.h>
@@ -7,10 +13,18 @@
 
 #define MAXOP  100 /* max size of operand or operator */
 #define NUMBER '0' /* signal that a number was found */
+#define TOP 'T'
+#define DUPLICATE 'D'
+#define SWAPTOP 'S'
+#define CLEAR 'C'
 
 int getop(char []); 
 void push(double); 
 double pop(void); 
+double top(void); 
+void duplicate(void); 
+void swaptop(void);
+void clear(void); 
 void printstack(); 
 void printbuf(); 
 
@@ -51,32 +65,34 @@ int main ()
 	    else
 		printf("error:zero divisor in modulus calculation\n"); 
 	    break; 
+	case TOP:
+	    printf("Top: \t%.8g\n", top()); 
+	    break; 
+	case DUPLICATE:
+	    duplicate(); 
+	    break; 
+	case SWAPTOP:
+	    swaptop(); 
+	    break; 
+	case CLEAR:
+	    clear(); 
+	    break; 
 	case '\n':
 	    printf("\t%.8g\n", pop()); 
 	    break; 
 	default:
 	    printf("error: unknown command %s\n", s); 
 	}
-	//printstack(); 
     }
     return 0; 
 }
 
+/*********************************************************************/
 /* push and pop */ 
 #define MAXVAL 100  /* maximum depth of val stack */ 
 
 int sp = 0;         /* next free stack position */ 
 double val[MAXVAL]; /* value stack */ 
-
-/* function to debug the stack */
-void printstack()
-{
-    printf("Current stack:\t"); 
-    for (int i = 0; i < sp; i++)
-	printf("%f\t", val[i]); 
-    printf("\n"); 
-}
-
 
 /* push: push f onto value stack */ 
 void push(double f)
@@ -98,6 +114,45 @@ double pop(void)
     }
 }
 
+/* function to debug the stack */
+void printstack()
+{
+    printf("Current stack:\t"); 
+    for (int i = 0; i < sp; i++)
+	printf("%f\t", val[i]); 
+    printf("\n"); 
+}
+
+/* top: return the top of the stack */
+double top(void)
+{
+    double f = pop(); /* make sure error check is performed */
+    push(f); 
+    return f; 
+}
+
+void duplicate(void)
+{
+    double f = top(); 
+    push(f); 
+}
+
+void swaptop(void)
+{
+    double f = pop(); 
+    double g = pop(); 
+    push(f); 
+    push(g); 
+}
+
+void clear(void)
+{
+    sp = 0; 
+}
+
+/*********************************************************************/
+
+/*********************************************************************/
 /* getop: get next operator or numeric operand */
 #include <ctype.h>
 
@@ -137,6 +192,9 @@ int getop(char s[])
     return NUMBER; 
 }
 
+/*********************************************************************/
+
+/*********************************************************************/
 /* getch and ungetch */
 #define BUFSIZE 100
 char buf[BUFSIZE]; /* buffer for ungetch */
@@ -163,3 +221,5 @@ void printbuf()
 	printf("%d\t", buf[i]); 
     printf("\n"); 
 }
+
+/*********************************************************************/
