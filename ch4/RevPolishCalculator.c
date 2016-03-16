@@ -247,6 +247,8 @@ void ungetch(int c) /* push character back on input */
 	buf[bufp++] = c; 
 }
 
+/* Exercise 4-7 */
+/* ungets(s): put an entire string back into the buffer */
 void ungets(char s[])
 {
     for (int i = strlen(s) - 1; i >= 0; i--) {
