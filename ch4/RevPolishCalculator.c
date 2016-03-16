@@ -11,8 +11,9 @@
 #include <stdio.h>
 #include <stdlib.h> /* for atof */
 
-#define MAXOP  100 /* max size of operand or operator */
-#define NUMBER '0' /* signal that a number was found */
+#define MAXOP  100  /* max size of operand or operator */
+#define NUMBER '0'  /* signal that a number was found */
+#define LIBFUNC '1' /* signal that a library function was found */
 #define TOP 'T'
 #define DUPLICATE 'D'
 #define SWAPTOP 'S'
@@ -131,12 +132,14 @@ double top(void)
     return f; 
 }
 
+/* duplicate: duplicate the top element of the stack */
 void duplicate(void)
 {
     double f = top(); 
     push(f); 
 }
 
+/* swaptop: swap the top two elements of the stack */
 void swaptop(void)
 {
     double f = pop(); 
@@ -145,6 +148,7 @@ void swaptop(void)
     push(g); 
 }
 
+/* clear: clear the stack */
 void clear(void)
 {
     sp = 0; 
@@ -155,9 +159,13 @@ void clear(void)
 /*********************************************************************/
 /* getop: get next operator or numeric operand */
 #include <ctype.h>
+#define MATCH    1
+#define NO_MATCH 0
 
 int getch(void); 
 void ungetch(int); 
+void ungets(char[]); /* Exercisr 4-7 */
+int match(char[]); 
 
 /* Exercise 4-3, added provision for negative numbers */
 int getop(char s[])
@@ -192,10 +200,36 @@ int getop(char s[])
     return NUMBER; 
 }
 
+/* match(p): match the given string pattern p from the input
+   returns 1 if the pattern specified is matched, 0 if not matched. 
+   If the pattern is matched, the input pointer is moved to the character
+   right after the matched pattern, otherwise the input pointer is reset 
+   to the value before this function is called. This behaviour is implemented
+   by calling ungets to push the unmatched pattern back into the buffer. 
+ */ 
+int match(char p[])
+{
+    char s[MAXOP]; 
+    int state = MATCH; 
+    for (int i = 0; p[i] != '\0'; i++) {
+	s[i] = getch(); 
+	if (s[i] != p[i]) {
+	    state = NO_MATCH;
+	    break; 
+	}
+    }
+
+    if (state == NO_MATCH)
+	ungets(s); 
+
+    return state; 
+}
+
 /*********************************************************************/
 
 /*********************************************************************/
 /* getch and ungetch */
+#include <string.h>
 #define BUFSIZE 100
 char buf[BUFSIZE]; /* buffer for ungetch */
 int bufp = 0;      /* next free position in buf */
@@ -213,12 +247,20 @@ void ungetch(int c) /* push character back on input */
 	buf[bufp++] = c; 
 }
 
+void ungets(char s[])
+{
+    for (int i = strlen(s) - 1; i >= 0; i--) {
+	printf("%d\t", i); 
+	ungetch(s[i]); 
+    }
+}
+
 /* function to debug the buf */
 void printbuf()
 {
     printf("Current buf:\t"); 
     for (int i = 0; i < bufp; i++)
-	printf("%d\t", buf[i]); 
+	printf("%c\t", buf[i]); 
     printf("\n"); 
 }
 
