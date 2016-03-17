@@ -6,6 +6,12 @@
    - 'D' for duplicating top of stack
    - 'S' for swaping the top two elements
    - 'C' for clearing the stack
+   Exercise 4-5: For exercise 4-5, the following commands are added
+   - 'SIN': calculates sin of x, the synax is 'x SIN'
+   - 'EXP': calculates exp(x) with the syntax 'x EXP'
+   - 'POW': calculates pow(x) with the syntax 'x y POW'
+   Exercise 4-6: Adding twenty-six variables with lower case letter 
+   as names. 
  */
 
 #include <stdio.h>
@@ -14,6 +20,7 @@
 
 #define MAXOP  100  /* max size of operand or operator */
 #define NUMBER '0'
+#define VAR 'v'
 #define TOP 'T'
 #define DUPLICATE 'D'
 #define SWAPTOP 'S'
@@ -175,6 +182,7 @@ void clear(void)
 }
 
 /*********************************************************************/
+
 
 /*********************************************************************/
 /* getop: get next operator or numeric operand */
