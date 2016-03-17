@@ -10,15 +10,25 @@
 
 #include <stdio.h>
 #include <stdlib.h> /* for atof */
+#include <math.h>   /* for Exercise 4-5 */
 
 #define MAXOP  100  /* max size of operand or operator */
-#define NUMBER '0'  /* signal that a number was found */
-#define LIBFUNC '1' /* signal that a library function was found */
+#define NUMBER '0'
 #define TOP 'T'
 #define DUPLICATE 'D'
 #define SWAPTOP 'S'
 #define CLEAR 'C'
 
+#define PSIN "IN"  /* define key word pattern for SIN */
+#define PEXP "XP"  /* key word pattern for EXP */
+#define PPOW "OW"  /* key word pattern for POW */
+
+#define SIN 257
+#define EXP 258
+#define POW 259
+
+
+void runlibfunc(char []);
 int getop(char []); 
 void push(double); 
 double pop(void); 
@@ -66,6 +76,16 @@ int main ()
 	    else
 		printf("error:zero divisor in modulus calculation\n"); 
 	    break; 
+	case SIN:
+	    push(sin(pop())); 
+	    break; 
+	case EXP:
+	    push(exp(pop())); 
+	    break; 
+	case POW:
+	    op2 = pop(); 
+	    push(pow(pop(), op2)); 
+	    break; 
 	case TOP:
 	    printf("Top: \t%.8g\n", top()); 
 	    break; 
@@ -83,7 +103,7 @@ int main ()
 	    break; 
 	default:
 	    printf("error: unknown command %s\n", s); 
-	}
+	} 
     }
     return 0; 
 }
@@ -159,6 +179,7 @@ void clear(void)
 /*********************************************************************/
 /* getop: get next operator or numeric operand */
 #include <ctype.h>
+#include <string.h>
 #define MATCH    1
 #define NO_MATCH 0
 
@@ -170,11 +191,20 @@ int match(char[]);
 /* Exercise 4-3, added provision for negative numbers */
 int getop(char s[])
 {
-    int i, c; 
+    int i, c;    
 
     while ((s[0] = c = getch()) == ' ' || c == '\t')
 	; 
+
+    if (c == 'S' && match(PSIN)) 
+	return SIN; 
+    if (c == 'E' && match(PEXP))
+	return EXP; 
+    if (c == 'P' && match(PPOW))
+	return POW; 
+    
     s[1] = '\0'; 
+
     if (!isdigit(c) && c != '.' && c != '-')
 	return c; /* not a number */
     
@@ -209,18 +239,21 @@ int getop(char s[])
  */ 
 int match(char p[])
 {
-    char s[MAXOP]; 
+    char t[MAXOP]; 
+    int i; 
     int state = MATCH; 
-    for (int i = 0; p[i] != '\0'; i++) {
-	s[i] = getch(); 
-	if (s[i] != p[i]) {
+    for (i = 0; p[i] != '\0' && state; i++) {
+	t[i] = getch(); 
+	if (t[i] != p[i]) {
 	    state = NO_MATCH;
-	    break; 
 	}
     }
 
-    if (state == NO_MATCH)
-	ungets(s); 
+    t[i] = '\0';
+
+    if (state == NO_MATCH) {
+	ungets(t); 
+    }
 
     return state; 
 }
@@ -229,7 +262,6 @@ int match(char p[])
 
 /*********************************************************************/
 /* getch and ungetch */
-#include <string.h>
 #define BUFSIZE 100
 char buf[BUFSIZE]; /* buffer for ungetch */
 int bufp = 0;      /* next free position in buf */
@@ -251,8 +283,7 @@ void ungetch(int c) /* push character back on input */
 /* ungets(s): put an entire string back into the buffer */
 void ungets(char s[])
 {
-    for (int i = strlen(s) - 1; i >= 0; i--) {
-	printf("%d\t", i); 
+    for (int i = strlen(s) - 1; i >= 0; i--) { 
 	ungetch(s[i]); 
     }
 }
