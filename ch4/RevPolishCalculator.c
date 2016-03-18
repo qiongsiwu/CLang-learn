@@ -11,7 +11,17 @@
    - 'EXP': calculates exp(x) with the syntax 'x EXP'
    - 'POW': calculates pow(x) with the syntax 'x y POW'
    Exercise 4-6: Adding twenty-six variables with lower case letter 
-   as names. 
+   as names. The syntax is the following
+   - to assign a value to a variable use
+     value variable<-
+     For example, to assign variable 'a' value 3.14, use
+     3.14 a<- 
+   - to use the value already assigned, use the name of the variable
+     for example, to use 'a', which has value 3.14, use
+     a 2 *
+     this gives 6.28
+   - using an uninitialized variable causes undefined behaviour. 
+   - variable 'RP' is the recently printed value. 
  */
 
 #include <stdio.h>
@@ -20,29 +30,44 @@
 
 #define MAXOP  100  /* max size of operand or operator */
 #define NUMBER '0'
-#define VAR 'v'
+
+#define VAR 257
+#define ASSIGN 258
+#define RECENTPRINT 259
+
 #define TOP 'T'
 #define DUPLICATE 'D'
 #define SWAPTOP 'S'
 #define CLEAR 'C'
 
+#define ASSN "<-"  /* pattern for assignment operation */
+#define RECP "P"   /* pattern for recent print value */
 #define PSIN "IN"  /* define key word pattern for SIN */
 #define PEXP "XP"  /* key word pattern for EXP */
 #define PPOW "OW"  /* key word pattern for POW */
 
-#define SIN 257
-#define EXP 258
-#define POW 259
+#define SIN 260
+#define EXP 261
+#define POW 262
 
-
-void runlibfunc(char []);
+/* functions that load the next valid token */
 int getop(char []); 
+
+/* functions that manipulate the stack */
 void push(double); 
 double pop(void); 
 double top(void); 
 void duplicate(void); 
 void swaptop(void);
 void clear(void); 
+
+/* functions that manages the variable table */
+void setvar(char, double); 
+void setrecentprint(double);
+double getvar(char); 
+double getrecentprint(); 
+
+/* functions for debugging */
 void printstack(); 
 void printbuf(); 
 
@@ -58,6 +83,15 @@ int main ()
 	switch (type) {
 	case NUMBER:
 	    push(atof(s)); 
+	    break; 
+	case VAR:
+            push(getvar(s[0]));
+	    break; 
+	case ASSIGN:
+	    setvar(s[0], top()); 
+	    break; 
+	case RECENTPRINT:
+	    push(getrecentprint()); 
 	    break; 
 	case '+':
 	    push(pop() + pop()); 
@@ -94,7 +128,9 @@ int main ()
 	    push(pow(pop(), op2)); 
 	    break; 
 	case TOP:
-	    printf("Top: \t%.8g\n", top()); 
+	    op2 = top(); 
+	    setrecentprint(op2); 
+	    printf("Top: \t%.8g\n", op2); 
 	    break; 
 	case DUPLICATE:
 	    duplicate(); 
@@ -106,6 +142,8 @@ int main ()
 	    clear(); 
 	    break; 
 	case '\n':
+	    op2 = top(); 
+	    setrecentprint(op2); 
 	    printf("\t%.8g\n", pop()); 
 	    break; 
 	default:
@@ -204,14 +242,26 @@ int getop(char s[])
     while ((s[0] = c = getch()) == ' ' || c == '\t')
 	; 
 
+    /* recognizing math functions */
     if (c == 'S' && match(PSIN)) 
 	return SIN; 
     if (c == 'E' && match(PEXP))
 	return EXP; 
     if (c == 'P' && match(PPOW))
 	return POW; 
+
+    if (c == 'R' && match(RECP))
+	return RECENTPRINT; 
     
     s[1] = '\0'; 
+
+    /* recognizing single letter variables */
+    if (isalpha(c) && islower(c)) {
+	if (match(ASSN))
+	    return ASSIGN; 
+	else
+	    return VAR; 
+    }
 
     if (!isdigit(c) && c != '.' && c != '-')
 	return c; /* not a number */
@@ -303,6 +353,33 @@ void printbuf()
     for (int i = 0; i < bufp; i++)
 	printf("%c\t", buf[i]); 
     printf("\n"); 
+}
+
+/*********************************************************************/
+
+/*********************************************************************/
+/* table for variables */
+#define MAXVAR 27   /* all the letters plus the most recently printed */
+double sym[MAXVAR]; 
+
+void setvar(char var, double f)
+{
+    sym[var - 'a'] = f;  
+}
+
+void setrecentprint(double f)
+{
+    sym[MAXVAR - 1] = f; 
+}
+
+double getvar(char var)
+{
+    return sym[var - 'a']; 
+}
+
+double getrecentprint()
+{
+    return sym[MAXVAR - 1]; 
 }
 
 /*********************************************************************/
