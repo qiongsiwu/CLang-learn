@@ -118,7 +118,7 @@ int getop(char s[])
 
 /* getch and ungetch */
 #define BUFSIZE 1  /* Exercise 4-8 */
-char buf[BUFSIZE]; /* buffer for ungetch */
+int buf[BUFSIZE];  /* buffer for ungetch  - Exercise 4-9 */
 int bufp = 0;      /* next free position in buf */
 
 int getch(void) /* get a (possibly pushed back) character */
