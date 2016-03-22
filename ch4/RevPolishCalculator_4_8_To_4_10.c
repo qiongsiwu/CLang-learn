@@ -9,6 +9,7 @@
 #define NUMBER '0' /* signal that a number was found */
 
 int getop(char []); 
+int getopfromline(char []); 
 void push(double); 
 double pop(void); 
 void printstack(); 
@@ -20,7 +21,7 @@ int main ()
     double op2; 
     char s[MAXOP]; 
 
-    while ((type = getop(s)) != EOF) {
+    while ((type = getopfromline(s)) != EOF) {
 	switch (type) {
 	case NUMBER:
 	    push(atof(s)); 
@@ -90,16 +91,26 @@ double pop(void)
 
 /* getop: get next operator or numeric operand */
 #include <ctype.h>
+#define LINE_LEN 1024
+#define IN 1
+#define OUT 0
 
 int getch(void); 
 void ungetch(int); 
 
+int getline(char [], int); 
+
+char line[LINE_LEN]; 
+int idx = 0;           /* index of current char */
+int state = OUT; 
+
 int getop(char s[])
 {
     int i, c; 
-
+	
     while ((s[0] = c = getch()) == ' ' || c == '\t')
 	; 
+
     s[1] = '\0'; 
     if (!isdigit(c) && c != '.')
 	return c; /* not a number */
@@ -114,6 +125,71 @@ int getop(char s[])
     if (c != EOF)
 	ungetch(c); 
     return NUMBER; 
+}
+
+/* getopfromline: return the type of the op and store the attribute
+   in s. Exercuse 4-10. 
+ */
+int getopfromline(char s[])
+{
+    int i, c;
+    int end = 0; 
+
+    if (state == OUT) {
+	state = IN; 
+	end = getline(line, LINE_LEN); 
+	idx = 0; 
+    }
+
+    while ((s[0] = c = line[idx++]) == ' ' || c == '\t')
+	; 
+
+    s[1] = '\0'; 
+    if (!isdigit(c) && c != '.') {	 
+	if (isprint(c) && c != '\n')
+	    return c; /* not a number */
+	if (end) {
+	    state = OUT; 
+	    return EOF; 
+	}
+	if (c == '\n')
+	    state = OUT;
+	return c;     /* not a number */
+    }
+
+    i = 0; 
+    if (isdigit(c)) /* collect integer part */
+	while (isdigit(s[++i] = c = line[idx++]))
+	    ;
+    if (c == '.')
+	while (isdigit(s[++i] = c = line[idx++]))
+	    ; 
+    s[i] = '\0';  
+    return NUMBER;    
+}
+
+/* getline: read a line into s, return 1 if reaches EOF on current 
+   line.  
+ */
+int getline(char s[], int lim)
+{
+    int c, i, end; 
+    
+    for (i=0; i<lim-1 && (c=getchar())!=EOF && c!='\n';++i)
+	s[i] = c; 
+    if (c == '\n') {
+	s[i] = c; 
+	++i; 
+    }
+
+    if (c == EOF)
+	end = 1; 
+    else 
+	end = 0; 
+
+    s[i] = '\0';
+
+    return end; 
 }
 
 /* getch and ungetch */
