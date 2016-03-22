@@ -102,6 +102,7 @@ int getline(char [], int);
 
 char line[LINE_LEN]; 
 int idx = 0;           /* index of current char */
+int end = 0;           /* indicator if the current line has EOF */
 int state = OUT; 
 
 int getop(char s[])
@@ -133,7 +134,6 @@ int getop(char s[])
 int getopfromline(char s[])
 {
     int i, c;
-    int end = 0; 
 
     if (state == OUT) {
 	state = IN; 
