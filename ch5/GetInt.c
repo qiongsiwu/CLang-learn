@@ -54,7 +54,6 @@ int getint(int *pn)
 }
 
 /* getch and ungetch */
-#include <stdio.h>
 #define BUFSIZE 100  
 int buf[BUFSIZE];  /* buffer for ungetch  - Exercise 4-9 */
 int bufp = 0;      /* next free position in buf */
