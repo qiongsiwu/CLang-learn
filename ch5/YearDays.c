@@ -1,4 +1,4 @@
-/* Exercise 5-8 */ 
+/* Exercise 5-8 and Exercise 5-9 */ 
 #include <stdio.h>
 
 int day_of_year(int year, int month, int day); 
@@ -46,14 +46,17 @@ int day_of_year(int year, int month, int day)
     }
     
     leap = (year%4 == 0 && year%100 != 0) || year%400 == 0; 
+
+    char (*days)[13] = daytab + leap; 
     
-    if (day > daytab[leap][month]) {
+    if (day > *(*days + month)) {
 	printf("Invalid day \'%d\' for month %d \n", day, month); 
 	return -1; 
     }
     
-    for (i = 1; i < month; i++)
-	day += daytab[leap][i]; 
+    for (i = 1; i < month; i++) {
+	day +=  *(*days + i); 
+    }
     return day; 
 }
 
@@ -63,17 +66,17 @@ void month_day(int year, int yearday, int *pmonth, int *pday)
     int i, leap; 
     leap = (year%4 == 0 && year%100 != 0) || year%400 == 0; 
 
-    if (yearday < 1 || yearday > maxday[leap]) {
+    char (*days)[13] = daytab + leap; 
+
+    if (yearday < 1 || yearday > *(maxday + leap)) {
 	printf("Invalid yearday. For year %d, "
 	       " yearday must be between 1 and %d\n", 
-	       year, maxday[leap]); 
-	*pmonth = -1; 
-	*pday = -1; 
+	       year, *(maxday + leap));  
 	return; 
     }
     
-    for (i = 1; yearday > daytab[leap][i]; i++)
-	yearday -= daytab[leap][i]; 
+    for (i = 1; yearday > *(*days + i); i++)
+	yearday -= *(*days + i); 
     *pmonth = i; 
     *pday = yearday; 
 }
