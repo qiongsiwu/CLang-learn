@@ -9,7 +9,7 @@ extern int tabstop; /* size of a tab */
 
 int main()
 {
-    if (tabstop == 1) /* not replacement performed if */
+    if (tabstop == 1) /* no replacement performed if */
 	return 0;     /* tabstop is 1. i.e. if tab is the same 
 	                 as a space. 
 		       */
